@@ -192,7 +192,35 @@ void DCListDestroy(DCList *phead) {
 
 void DCListSort(DCList phead) {
     assert(phead != NULL);
-
+    DCListNode *p = phead->next;
+    DCListNode *q = p->next;
+    DCListNode *s = phead->next;
+    p->next = phead;
+    phead->prev = p;
+    p = q;
+    q = q->next;
+    while (p != phead) {
+        if (p->data < s->data) {
+            p->next = s;
+            p->prev = s->prev;
+            p->next->prev = p;
+            p->prev->next = p;
+            s = phead->next;
+        } else {
+            if (s->next == phead) {
+                p->next = phead;
+                p->prev = s;
+                p->prev->next = p;
+                p->next->prev = p;
+                s = phead->next;
+            } else {
+                s = s->next;
+                continue;
+            }
+        }
+        p = q;
+        q = q->next;
+    }
 }
 
 #endif //DCLIST_DCLIST_H
